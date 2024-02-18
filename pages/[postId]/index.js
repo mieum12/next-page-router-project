@@ -1,13 +1,13 @@
 import PostDetail from "@/components/posts/PostDetail";
+import {MongoClient, ObjectId} from "mongodb";
 
-export default function PostDetails() {
+export default function PostDetails(props) {
   return (
     <PostDetail
-      image='https://i.pinimg.com/564x/b6/49/aa/b649aa1f8a5393e6b41f5a2fa5479ad4.jpg'
-      id='p1'
-      title='first post'
-      summary='summaryyyy'
-      description='this is descriptionnnnn'
+      image={props.postData.image}
+      title={props.postData.title}
+      summary={props.postData.summary}
+      description={props.postData.description}
     />
   )
 }
@@ -21,6 +21,15 @@ export default function PostDetails() {
 // 만약 사전 생성된 id를 url에 입력한 경우 사용자에게 404 보여줌
 // 이 원리에 따라 getStaticPaths을 추가한다
 export async function getStaticPaths() {
+
+  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
+  const client = await MongoClient.connect(url)
+  const db = client.db()
+  const postsCollection = db.collection('posts')
+  const posts = await postsCollection.find( {}, { _id: 1 } ).toArray()
+
+  await client.close()
+
   return {
     // fallback은 지원하는 매개변수 값이 모두 있는지, 일부만 있는지 알려준다
     // false 이면 paths가 지원하는 모든 postId값이 있다는 뜻
@@ -31,25 +40,10 @@ export async function getStaticPaths() {
     // 나머지는 요청이 입력되었을 때 동적으로 사전 생성하도록 함
     fallback: false,
     // 동적 페이지의 버전마다 하나의 객체 필요
-    paths: [
-
-      {
-        params: {
-          postId: 'p1'
-        }
-      },
-      {
-        params: {
-          postId: 'p2'
-        }
-      },
-      {
-        params: {
-          postId: 'p3'
-        }
-      },
-
-    ]
+    // 경로 배열을 동적으로 생성하기
+    paths: posts.map(post => ({
+      params: { postId: post._id.toString()}
+    }))
   }
 }
 export async function getStaticProps(context){
@@ -58,16 +52,25 @@ export async function getStaticProps(context){
   // 이 함수 내에서는 useRoute를 쓸 수 없음
   // params는 대괄호로 감싼 식별자(postId)를 알 수 있고, url에 부호화된 실제 값을 갖는다
   const postId = context.params.postId
-  console.log(postId)
+
+  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
+  const client = await MongoClient.connect(url)
+  const db = client.db()
+  const postsCollection = db.collection('posts')
+
+  const selectedPost = await postsCollection.findOne({ '_id': new ObjectId(postId) })
+
+  await client.close()
+
 
   return {
     props: {
       postData: {
-        image:'https://i.pinimg.com/564x/b6/49/aa/b649aa1f8a5393e6b41f5a2fa5479ad4.jpg',
-        id: postId,
-        title:'first post',
-        summary:'summaryyyy',
-        description:'this is descriptionnnnn'
+        id: selectedPost._id.toString(),
+        title: selectedPost.title,
+        summary: selectedPost.summary,
+        image: selectedPost.image,
+        description: selectedPost.description
       }
     }
   }
