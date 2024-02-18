@@ -28,8 +28,7 @@ const DUMMY_POSTS = [
 export default function HomePage() {
   return (
     <div>
-      <h1>The Home Page</h1>
-      <PostList posts={DUMMY_POSTS}/>
+        <PostList posts={DUMMY_POSTS}/>
     </div>
   );
 }
