@@ -3,6 +3,7 @@ import {ObjectId} from "mongodb";
 import connectToMongoDB from "@/lib/connectToDB";
 import {Fragment} from "react";
 import Head from "next/head";
+import Comments from "@/components/comments/comments";
 
 export default function PostDetails(props) {
   return (
@@ -20,6 +21,7 @@ export default function PostDetails(props) {
         summary={props.postData.summary}
         description={props.postData.description}
       />
+      <Comments postId={props.postData.id} />
     </Fragment>
 
   )
