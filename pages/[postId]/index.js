@@ -1,15 +1,27 @@
 import PostDetail from "@/components/posts/PostDetail";
 import {ObjectId} from "mongodb";
 import connectToMongoDB from "@/lib/connectToDB";
+import {Fragment} from "react";
+import Head from "next/head";
 
 export default function PostDetails(props) {
   return (
-    <PostDetail
-      image={props.postData.image}
-      title={props.postData.title}
-      summary={props.postData.summary}
-      description={props.postData.description}
-    />
+    <Fragment>
+      <Head>
+        <title>{props.postData.title}</title>
+        <meta
+          name='description'
+          content={props.postData.description}
+        />
+      </Head>
+      <PostDetail
+        image={props.postData.image}
+        title={props.postData.title}
+        summary={props.postData.summary}
+        description={props.postData.description}
+      />
+    </Fragment>
+
   )
 }
 

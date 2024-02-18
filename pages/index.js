@@ -1,11 +1,20 @@
 import PostList from "@/components/posts/PostList";
 import connectToMongoDB from "@/lib/connectToDB";
+import {Fragment} from "react";
+import Head from "next/head";
 
 export default function HomePage(props) {
   return (
-    <div>
+    <Fragment>
+      <Head>
+        <title>Jiwon&apos;s Blog</title>
+        <meta
+          name='description'
+          content='personal blog!'
+        />
+      </Head>
         <PostList posts={props.posts}/>
-    </div>
+    </Fragment>
   );
 }
 

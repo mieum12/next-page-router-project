@@ -1,5 +1,7 @@
 import NewPostForm from "@/components/posts/NewPostForm";
 import {useRouter} from "next/router";
+import {Fragment} from "react";
+import Head from "next/head";
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -17,6 +19,16 @@ export default function NewPostPage() {
     await router.push('/')
   }
   return (
-    <NewPostForm onAddPost={addPostHandler}/>
+    <Fragment>
+      <Head>
+        <title>Add new Post!</title>
+        <meta
+          name='description'
+          content='adding...'
+        />
+      </Head>
+
+      <NewPostForm onAddPost={addPostHandler}/>
+    </Fragment>
   )
 }
