@@ -42,6 +42,13 @@ export default function HomePage(props) {
 // 필요한 데이터가 포함된 상태로 컴포넌트가 랜더링 된다
 // 서버 사이드, 정확하게는 빌드 프로세스에서 데이터를 가져오는 것이다.
 
+// 문제점
+// - 데이터가 오래되었을 경우
+// 재구축하고 배포할 수는 있다 -> 번거로움
+// revalidate에 넣은 숫자만큼 빌드 프로세스중 대기한 뒤 해당 페이지가 생성
+// 10: 요청이 있을때 최소 10초마다 해당 페이지가 재생성된다
+// 데이터가 변했다고 재배포를 하거나 재구축을 할 필요가 없어진다
+
 
 export async function getStaticProps() {
   // fetch data from an API
@@ -51,7 +58,8 @@ export async function getStaticProps() {
     // props는 이 페이지 컴포넌트에 대한 props이다
     props: {
       posts: DUMMY_POSTS
-    }
+    },
+    revalidate: 1
   }
 
 }
