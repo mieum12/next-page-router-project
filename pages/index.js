@@ -1,5 +1,5 @@
 import PostList from "@/components/posts/PostList";
-import {MongoClient} from "mongodb";
+import connectToMongoDB from "@/lib/connectToDB";
 
 export default function HomePage(props) {
   return (
@@ -38,10 +38,7 @@ export async function getStaticProps() {
   // 불필요한 추가요청을 피할 수 있다
 
   // 이 부분은 따로 빼서 쓸 수도 있지만 일단 사용
-  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
-  const client = await MongoClient.connect(url)
-  const db = client.db()
-  const postsCollection = db.collection('posts')
+  const { client, postsCollection } = await connectToMongoDB();
   const posts = await postsCollection.find().toArray()
   await client.close()
   // 항상 객체를 반환하는 것이 중요하다

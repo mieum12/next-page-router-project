@@ -1,5 +1,6 @@
 import PostDetail from "@/components/posts/PostDetail";
-import {MongoClient, ObjectId} from "mongodb";
+import {ObjectId} from "mongodb";
+import connectToMongoDB from "@/lib/connectToDB";
 
 export default function PostDetails(props) {
   return (
@@ -22,10 +23,8 @@ export default function PostDetails(props) {
 // 이 원리에 따라 getStaticPaths을 추가한다
 export async function getStaticPaths() {
 
-  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
-  const client = await MongoClient.connect(url)
-  const db = client.db()
-  const postsCollection = db.collection('posts')
+  const { client, postsCollection } = await connectToMongoDB();
+
   const posts = await postsCollection.find( {}, { _id: 1 } ).toArray()
 
   await client.close()
@@ -53,10 +52,7 @@ export async function getStaticProps(context){
   // params는 대괄호로 감싼 식별자(postId)를 알 수 있고, url에 부호화된 실제 값을 갖는다
   const postId = context.params.postId
 
-  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
-  const client = await MongoClient.connect(url)
-  const db = client.db()
-  const postsCollection = db.collection('posts')
+  const { client, postsCollection } = await connectToMongoDB();
 
   const selectedPost = await postsCollection.findOne({ '_id': new ObjectId(postId) })
 
