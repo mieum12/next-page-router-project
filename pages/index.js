@@ -1,29 +1,5 @@
 import PostList from "@/components/posts/PostList";
-
-const DUMMY_POSTS = [
-  {
-    id: 'p1',
-    title: 'titlwwww',
-    image: 'https://i.pinimg.com/736x/7b/b8/b6/7bb8b64e70d19814b881215aadfcd631.jpg',
-    summary: '11111',
-    description: 'descriptionnnn'
-  },
-  {
-    id: 'p2',
-    title: 'titlwwww2222',
-    image: 'https://i.pinimg.com/736x/7b/b8/b6/7bb8b64e70d19814b881215aadfcd631.jpg',
-    summary: '2222',
-    description: 'descriptionnnn22222'
-  },
-  {
-    id: 'p3',
-    title: 'titlwwww3333',
-    image: 'https://i.pinimg.com/736x/7b/b8/b6/7bb8b64e70d19814b881215aadfcd631.jpg',
-    summary: '3333333',
-    description: 'descriptionnnn333333'
-  }
-]
-
+import {MongoClient} from "mongodb";
 
 export default function HomePage(props) {
   return (
@@ -52,13 +28,33 @@ export default function HomePage(props) {
 // ex. 10: 요청이 있을때 최소 10초마다 해당 페이지가 재생성된다
 // 데이터가 변했다고 재배포를 하거나 재구축을 할 필요가 없어진다
 export async function getStaticProps() {
-  // fetch data from an API
+  // [fetch data from an API]
+  // fetch('/api/post') 이렇게 요청을 보낼 수도 있다
+  // 여기서 자체 API 앤드포인트로 요청을 보내는 것은 중복된다
+  // 서버나 빌드때만 실행되는 코드들이다, 클라이언트에 노출되는 코드들이 아니다
+  // 따라서 여기에 모든 포스트를 가져오려면 getStaticProps에 바로 코드를 작성하거나
+  // 여기서 실행할 헬퍼 함수를 작성할 수도 있다
+  // 따라서 자체 API라우트로 요청을 보낼 필요가 없다
+  // 불필요한 추가요청을 피할 수 있다
 
+  // 이 부분은 따로 빼서 쓸 수도 있지만 일단 사용
+  const url = 'mongodb+srv://qpdlqltb1215:ADriB68N9I2u2KaY@cluster0.trp51w4.mongodb.net/mydatabase?retryWrites=true&w=majority'
+  const client = await MongoClient.connect(url)
+  const db = client.db()
+  const postsCollection = db.collection('posts')
+  const posts = await postsCollection.find().toArray()
+  await client.close()
   // 항상 객체를 반환하는 것이 중요하다
   return {
     // props는 이 페이지 컴포넌트에 대한 props이다
     props: {
-      posts: DUMMY_POSTS
+      posts: posts.map(post => ({
+        title: post.title,
+        summary: post.summary,
+        image: post.image,
+        description: post.description,
+        id: post._id.toString(),
+      }))
     },
     revalidate: 1
   }

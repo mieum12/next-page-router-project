@@ -17,8 +17,11 @@ export default async function handler(req, res) {
     // result는 객체로 자동 생성된 id가 해당될 것
     const result = await postsCollection.insertOne(data)
     console.log(result)
+    await client.close()
 
     // 2. response를 다시 전송
     res.status(201).json({ message: 'Post inserted!'})
+
+
   }
 }
