@@ -34,7 +34,7 @@ export default function HomePage(props) {
 }
 
 // [1️⃣getStaticProps]
-// next가 사전 랜더링 시 해당 함수를 실핼하게 된다
+// next가 사전 랜더링 시 해당 함수를 실행하게 된다
 // 컴포넌트 함수를 호출하기 전에 getStaticProps을 먼저 호출하게 된다
 // 비동기식으로 설정할 수 있어서 유용하다
 // 넥스트가 해당 프로미스의 수향을 기다린다는 점이 중요
@@ -70,11 +70,11 @@ export async function getStaticProps() {
 // 빌드 프로세스 중이라거나, 몇초마다가 아닌 모든 요청에 대해서 말이다
 // 이럴 경우 getServerSideProps라는 방법도 있다
 // getStaticProps와의 차이는 빌드 중 실행되지 않는다는 점
-// // 대신 이 함수는 배포 후 상시 서버 상에 존재한다
-// // 매 요청에 대해 실행된다는 점이 단점이 될 수도 있다
-// // 매 요청마다 페이지 생성을 기다려야한다는 말과 같다
-// // req 객체에 대한 엑세스, 즉 인증에 대한 엑세스가 없다면 getStaticProps가 나을 수 있다
-// // 즉, 구체적인 req 객체에 대한 엑세스가 있을 떄, 데이터가 몇초마다 바뀌는 경우에만 사용하는 편이다
+// 대신 이 함수는 배포 후 상시 서버 상에 존재한다
+// 매 요청에 대해 실행된다는 점이 단점이 될 수도 있다
+// 매 요청마다 페이지 생성을 기다려야한다는 말과 같다
+// req 객체에 대한 엑세스, 즉 인증에 대한 엑세스가 없다면 getStaticProps가 나을 수 있다
+// 즉, 구체적인 req 객체에 대한 엑세스가 있을 떄, 데이터가 몇초마다 바뀌는 경우에만 사용하는 편이다
 // export async function getServerSideProps(context) {
 //   // 서버측에서만 실행된다
 //   const req = context.req
