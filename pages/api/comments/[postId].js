@@ -2,7 +2,7 @@ import {connectToCommentCollectionInMongoDB} from "@/lib/connectToDB";
 
 export default async function handler(req, res) {
   const postId = req.query.postId
-  const {client, db, commentsCollection} = await connectToCommentCollectionInMongoDB()
+  const { commentsCollection} = await connectToCommentCollectionInMongoDB()
 
   if (req.method === 'POST') {
     const { email, name, text } = req.body
@@ -34,15 +34,14 @@ export default async function handler(req, res) {
 
     console.log(result,'💙')
 
-    res.status(201).json({ message: 'Added commnent!!', comment: NewComment })
+    res.status(201).json({ message: 'Added comment!!', comment: NewComment })
   }
   if (req.method === 'GET') {
-    const dummyList = [
-      {id: 'c1', name: 'jiwon', text: '1st comment!!'},
-      {id: 'c2', name: 'qqjiwon', text: '2st comment!!'},
-      {id: 'c3', name: 'ffjiwon', text: '3st comment!!'},
-    ]
+    const documents = await commentsCollection
+      .find()
+      .sort({ _id: -1 }) // id 내림차순 정렬, 최신 댓글이 첫 댓글이 되게
+      .toArray()
 
-    res.status(200).json({comments: dummyList})
+    res.status(200).json({comments: documents})
   }
 }
