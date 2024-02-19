@@ -1,6 +1,6 @@
 import PostDetail from "@/components/posts/PostDetail";
 import {ObjectId} from "mongodb";
-import connectToMongoDB from "@/lib/connectToDB";
+import {connectToPostCollectionInMongoDB} from "@/lib/connectToDB";
 import {Fragment} from "react";
 import Head from "next/head";
 import Comments from "@/components/comments/comments";
@@ -37,7 +37,7 @@ export default function PostDetails(props) {
 // 이 원리에 따라 getStaticPaths을 추가한다
 export async function getStaticPaths() {
 
-  const { client, postsCollection } = await connectToMongoDB();
+  const { client, postsCollection } = await connectToPostCollectionInMongoDB();
 
   const posts = await postsCollection.find( {}, { _id: 1 } ).toArray()
 
@@ -70,7 +70,7 @@ export async function getStaticProps(context){
   // params는 대괄호로 감싼 식별자(postId)를 알 수 있고, url에 부호화된 실제 값을 갖는다
   const postId = context.params.postId
 
-  const { client, postsCollection } = await connectToMongoDB();
+  const { client, postsCollection } = await connectToPostCollectionInMongoDB();
 
   const selectedPost = await postsCollection.findOne({ '_id': new ObjectId(postId) })
 
