@@ -1,5 +1,5 @@
 import PostList from "@/components/posts/PostList";
-import {connectToPostCollectionInMongoDB} from "@/lib/connectToDB";
+import {connectToPostCollection} from "@/lib/connectToDB";
 import {Fragment} from "react";
 import Head from "next/head";
 
@@ -47,7 +47,7 @@ export async function getStaticProps() {
   // 불필요한 추가요청을 피할 수 있다
 
   // 이 부분은 따로 빼서 쓸 수도 있지만 일단 사용
-  const { client, postsCollection } = await connectToPostCollectionInMongoDB();
+  const { client, postsCollection } = await connectToPostCollection();
   const posts = await postsCollection.find().toArray()
   await client.close()
   // 항상 객체를 반환하는 것이 중요하다
