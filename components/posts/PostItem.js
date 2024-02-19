@@ -1,6 +1,7 @@
 import Card from '../ui/Card';
 import classes from './PostItem.module.css';
 import {useRouter} from "next/router";
+import Image from "next/image";
 
 function PostItem(props) {
   // 프로그램 방식의 네비게이트
@@ -17,7 +18,7 @@ function PostItem(props) {
     <li className={classes.item}>
       <Card>
         <div className={classes.image}>
-          <img src={props.image} alt={props.title} />
+          <Image src={props.image} alt={props.title} width={400} height={400}/>
         </div>
         <div className={classes.content}>
           <h3>{props.title}</h3>
